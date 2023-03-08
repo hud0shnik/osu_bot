@@ -1,0 +1,2 @@
+# 🖌️ OsuStatsApi 🎶
+OsuStatsApi bot
