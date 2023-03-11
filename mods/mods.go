@@ -36,7 +36,8 @@ type Sticker struct {
 
 // Структуры для работы с другими API
 
-type OsuUserInfo struct {
+type UserInfo struct {
+	Success        bool     `json:"success"`
 	Error          string   `json:"error"`
 	Username       string   `json:"username"`
 	Names          []string `json:"previous_usernames"`
@@ -78,6 +79,12 @@ type OsuUserInfo struct {
 }
 
 // Функция вывода информации о пользователе Osu
+type OnlineInfo struct {
+	Success bool   `json:"success"`
+	Error   string `json:"error"`
+	Status  string `json:"status"`
+}
+
 func SendOsuInfo(botUrl string, update Update, username string) {
 
 	// Значение по дефолту
@@ -97,11 +104,11 @@ func SendOsuInfo(botUrl string, update Update, username string) {
 	// Запись респонса
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	var user = new(OsuUserInfo)
+	var user = new(UserInfo)
 	json.Unmarshal(body, &user)
 
 	// Проверка респонса
-	if user.Username == "" {
+	if !user.Success {
 		SendMsg(botUrl, update, user.Error)
 		return
 	}
@@ -121,10 +128,10 @@ func SendOsuInfo(botUrl string, update Update, username string) {
 		"PP <b>" + user.PP + "</b>\n" +
 		"-------карты---------\n" +
 		"SSH: <b>" + user.SSH + "</b>\n" +
-		"SH:   <b>" + user.SH + "</b>\n" +
-		"SS:   <b>" + user.SS + "</b>\n" +
-		"S:     <b>" + user.S + "</b>\n" +
-		"A:     <b>" + user.A + "</b>\n" +
+		"SH: <b>" + user.SH + "</b>\n" +
+		"SS: <b>" + user.SS + "</b>\n" +
+		"S: <b>" + user.S + "</b>\n" +
+		"A: <b>" + user.A + "</b>\n" +
 		"---------------------------\n" +
 		"Рейтинговые очки <b>" + user.RankedScore + "</b>\n" +
 		"Количество игр <b>" + user.PlayCount + "</b>\n" +
@@ -134,7 +141,7 @@ func SendOsuInfo(botUrl string, update Update, username string) {
 		"Реплеев просмотрено другими <b>" + user.Replays + "</b>\n" +
 		"Уровень <b>" + user.Level + "</b>\n" +
 		"---------------------------\n" +
-		"Время в игре " + user.PlayTime + "\n" +
+		"Время в игре <i>" + user.PlayTime + "</i>\n" +
 		"Уровень подписки " + user.SupportLvl + "\n"
 
 	if user.PostCount != "0" {
@@ -182,6 +189,42 @@ func SendOsuInfo(botUrl string, update Update, username string) {
 		PhotoUrl: user.AvatarUrl,
 		Caption:  responseText,
 	})
+}
+
+func SendOnlineInfo(botUrl string, update Update, username string) {
+
+	// Значение по дефолту
+	if username == "" {
+		username = "hud0shnik"
+	}
+
+	// Отправка запроса OsuStatsApi
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/online?id=" + username)
+
+	// Проверка на ошибку
+	if err != nil {
+		log.Printf("http.Get error: %s", err)
+		return
+	}
+
+	// Запись респонса
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var response = new(OnlineInfo)
+	json.Unmarshal(body, &response)
+
+	// Проверка респонса
+	if !response.Success {
+		SendMsg(botUrl, update, response.Error)
+		return
+	}
+
+	if response.Status == "true" {
+		SendMsg(botUrl, update, "Пользователь сейчас онлайн")
+	} else {
+		SendMsg(botUrl, update, "Пользователь сейчас не в сети")
+	}
+
 }
 
 // Функция вывода списка всех команд

@@ -81,8 +81,10 @@ func respond(botUrl string, update mods.Update) {
 		// fmt.Println("request: \t", request)
 
 		switch request[0] {
-		case "/osu":
+		case "/info":
 			mods.SendOsuInfo(botUrl, update, request[1])
+		case "/online":
+			mods.SendOnlineInfo(botUrl, update, request[1])
 		default:
 			mods.SendMsg(botUrl, update, "OwO")
 		}
