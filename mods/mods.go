@@ -34,7 +34,7 @@ type Sticker struct {
 	File_id string `json:"file_id"`
 }
 
-// Структуры для работы с другими API
+// Структуры для работы с OsuStatsApi
 
 type UserInfo struct {
 	Success        bool     `json:"success"`
@@ -78,13 +78,13 @@ type UserInfo struct {
 	FollowersCount string   `json:"follower_count"`
 }
 
-// Функция вывода информации о пользователе Osu
 type OnlineInfo struct {
 	Success bool   `json:"success"`
 	Error   string `json:"error"`
 	Status  string `json:"status"`
 }
 
+// Функция вывода информации о пользователе
 func SendOsuInfo(botUrl string, update Update, username string) {
 
 	// Значение по дефолту
@@ -92,7 +92,7 @@ func SendOsuInfo(botUrl string, update Update, username string) {
 		username = "hud0shnik"
 	}
 
-	// Отправка запроса моему API
+	// Отправка запроса OsuStatsApi
 	resp, err := http.Get("https://osustatsapi.vercel.app/api/user?type=string&id=" + username)
 
 	// Проверка на ошибку
@@ -191,6 +191,7 @@ func SendOsuInfo(botUrl string, update Update, username string) {
 	})
 }
 
+// Функция вывода статуса пользователя в сети
 func SendOnlineInfo(botUrl string, update Update, username string) {
 
 	// Значение по дефолту
