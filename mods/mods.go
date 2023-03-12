@@ -117,7 +117,7 @@ func SendOsuInfo(botUrl string, update Update, username string) {
 
 	responseText := "Информация о <b>" + user.Username + "</b>\n"
 
-	if user.Names[0] != "" {
+	if user.Names != nil {
 		responseText += "Aka " + user.Names[0] + "\n"
 	}
 
@@ -231,7 +231,8 @@ func SendOnlineInfo(botUrl string, update Update, username string) {
 // Функция вывода списка всех команд
 func Help(botUrl string, update Update) {
 	SendMsg(botUrl, update, "Привет👋🏻, вот список команд:"+"\n\n"+
-		"/osu <u>username</u> - информация о пользователе Osu")
+		"/osu <u>username</u> - информация о пользователе Osu\n"+
+		"/online <u>username</u> - статус пользователя в сети")
 }
 
 // Функция инициализации конфига (всех токенов)
