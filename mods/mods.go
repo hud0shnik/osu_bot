@@ -76,6 +76,7 @@ type UserInfo struct {
 	PmFriendsOnly  string   `json:"pm_friends_only"`
 	PostCount      string   `json:"post_count"`
 	FollowersCount string   `json:"follower_count"`
+	Medals         string   `json:"medals"`
 }
 
 type OnlineInfo struct {
@@ -142,7 +143,11 @@ func SendOsuInfo(botUrl string, update Update, username string) {
 		"Уровень <b>" + user.Level + "</b>\n" +
 		"---------------------------\n" +
 		"Время в игре <i>" + user.PlayTime + "</i>\n" +
-		"Уровень подписки " + user.SupportLvl + "\n"
+		"Достижений <i>" + user.Medals + "</i>\n"
+
+	if user.SupportLvl != "0" {
+		responseText += "Уровень подписки " + user.SupportLvl + "\n"
+	}
 
 	if user.PostCount != "0" {
 		responseText += "Постов на форуме " + user.PostCount + "\n"
