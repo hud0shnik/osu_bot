@@ -85,6 +85,49 @@ type OnlineInfo struct {
 	Status  string `json:"status"`
 }
 
+type MapInfo struct {
+	Success            bool               `json:"success"`
+	Error              string             `json:"error"`
+	Artist             string             `json:"artist"`
+	Covers             Covers             `json:"covers"`
+	Creator            string             `json:"creator"`
+	FavoriteCount      string             `json:"favorite_count"`
+	HypeCurrent        string             `json:"hype_current"`
+	HypeRequired       string             `json:"hype_required"`
+	Id                 string             `json:"id"`
+	Nsfw               string             `json:"nsfw"`
+	PlayCount          string             `json:"play_count"`
+	PreviewUrl         string             `json:"preview_url"`
+	Source             string             `json:"source"`
+	Spotlight          string             `json:"spotlight"`
+	Status             string             `json:"status"`
+	Title              string             `json:"title"`
+	UserId             string             `json:"user_id"`
+	Video              string             `json:"video"`
+	DownloadDisabled   string             `json:"download_disabled"`
+	Bpm                string             `json:"bpm"`
+	IsScoreable        string             `json:"is_scoreable"`
+	LastUpdated        string             `json:"last_updated"`
+	NominationsSummary NominationsSummary `json:"nominations_summary"`
+	Ranked             string             `json:"ranked"`
+	RankedDate         string             `json:"ranked_date"`
+	Storyboard         string             `json:"storyboard"`
+	Tags               []string           `json:"tags"`
+	GenreName          string             `json:"genre_name"`
+	LanguageName       string             `json:"language_name"`
+}
+
+type Covers struct {
+	List   string `json:"list"`
+	List2X string `json:"list@2x"`
+}
+
+// Оценка номинаций
+type NominationsSummary struct {
+	Current  string `json:"current"`
+	Required string `json:"required"`
+}
+
 // Функция вывода информации о пользователе
 func SendOsuInfo(botUrl string, update Update, username string) {
 
@@ -230,6 +273,47 @@ func SendOnlineInfo(botUrl string, update Update, username string) {
 	} else {
 		SendMsg(botUrl, update, "Пользователь сейчас не в сети")
 	}
+
+}
+
+// Функция отправки информации о карте
+func SendMapInfo(botUrl string, update Update, beatmapset, id string) {
+
+	if beatmapset == "" || id == "" {
+		SendMsg(botUrl, update, "Синтаксис команды:\n\n/map [beatmapset] [id]\nПример:\n/map 26154 89799")
+		return
+	}
+
+	// Отправка запроса OsuStatsApi
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/map?beatmapset=" + beatmapset + "&id=" + id)
+
+	// Проверка на ошибку
+	if err != nil {
+		log.Printf("http.Get error: %s", err)
+		return
+	}
+
+	// Запись респонса
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var response = new(MapInfo)
+	json.Unmarshal(body, &response)
+
+	// Проверка респонса
+	if !response.Success {
+		SendMsg(botUrl, update, response.Error)
+		return
+	}
+
+	// Формирование текста респонса
+
+	responseText := "Информация о <b>" + response.Title + "</b>\n" +
+		"Автор <i>" + response.Artist + "</i>"
+
+	SendPict(botUrl, update, SendPhoto{
+		PhotoUrl: response.Covers.List2X,
+		Caption:  responseText,
+	})
 
 }
 

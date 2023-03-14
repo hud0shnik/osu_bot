@@ -75,7 +75,7 @@ func respond(botUrl string, update mods.Update) {
 	// Обработчик команд
 	if update.Message.Text != "" {
 
-		request := append(strings.Split(update.Message.Text, " "), "")
+		request := append(strings.Split(update.Message.Text, " "), "", "")
 
 		// Вывод реквеста для тестов
 		// fmt.Println("request: \t", request)
@@ -85,6 +85,8 @@ func respond(botUrl string, update mods.Update) {
 			mods.SendOsuInfo(botUrl, update, request[1])
 		case "/online":
 			mods.SendOnlineInfo(botUrl, update, request[1])
+		case "/map":
+			mods.SendMapInfo(botUrl, update, request[1], request[2])
 		default:
 			mods.SendMsg(botUrl, update, "OwO")
 		}
