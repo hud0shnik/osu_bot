@@ -311,14 +311,42 @@ func SendMapInfo(botUrl string, update Update, beatmapset, id string) {
 		"Автор <i>" + response.Artist + "</i>\n" +
 		"Маппер <i>" + response.Creator + "</i>\n" +
 		"В избранных у <b>" + response.FavoriteCount + "</b>\n" +
-		"Количество игр <b>" + response.PlayCount + "</b>\n"
+		"Количество игр <b>" + response.PlayCount + "</b>\n" +
+		"Статус карты <b>" + response.Status + "</b>\n" +
+		"Bpm <b>" + response.Bpm + "</b>\n" +
+		"Жанр <b>" + response.GenreName + "</b>\n" +
+		"Язык <b>" + response.LanguageName + "</b>\n"
+
+	if response.Spotlight == "true" {
+		responseText += "Спотлайт карта\n"
+	}
+
+	if response.IsScoreable == "true" {
+		responseText += "Карта с таблицей рекордов\n"
+	}
+
+	if response.Ranked == "1" {
+		responseText += "Рейтинговая карта\n"
+	}
+
+	if response.Video == "true" {
+		responseText += "Карта с видео\n"
+	}
 
 	if response.HypeRequired != "" {
 		responseText += "Хайп <b>" + response.HypeCurrent + "</b>/<b>" + response.HypeRequired + "</b>\n"
 	}
 
+	if response.NominationsSummary.Required != "" {
+		responseText += "Номинации <b>" + response.NominationsSummary.Current + "</b>/<b>" + response.NominationsSummary.Required + "</b>\n"
+	}
+
 	if response.Nsfw == "true" {
 		responseText += "NSFW карта\n"
+	}
+
+	if response.Storyboard == "true" {
+		responseText += "Карта со сторибордой"
 	}
 
 	SendPict(botUrl, update, SendPhoto{
