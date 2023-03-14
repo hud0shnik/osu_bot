@@ -94,7 +94,6 @@ type MapInfo struct {
 	FavoriteCount      string             `json:"favorite_count"`
 	HypeCurrent        string             `json:"hype_current"`
 	HypeRequired       string             `json:"hype_required"`
-	Id                 string             `json:"id"`
 	Nsfw               string             `json:"nsfw"`
 	PlayCount          string             `json:"play_count"`
 	PreviewUrl         string             `json:"preview_url"`
@@ -279,13 +278,14 @@ func SendOnlineInfo(botUrl string, update Update, username string) {
 // Функция отправки информации о карте
 func SendMapInfo(botUrl string, update Update, beatmapset, id string) {
 
+	// Проверка параметров
 	if beatmapset == "" || id == "" {
-		SendMsg(botUrl, update, "Синтаксис команды:\n\n/map [beatmapset] [id]\nПример:\n/map 26154 89799")
+		SendMsg(botUrl, update, "Синтаксис команды:\n\n/map [beatmapset] [id]\n\nПример:\n/map <b>26154 89799</b>")
 		return
 	}
 
 	// Отправка запроса OsuStatsApi
-	resp, err := http.Get("https://osustatsapi.vercel.app/api/map?beatmapset=" + beatmapset + "&id=" + id)
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/map?type=string&beatmapset=" + beatmapset + "&id=" + id)
 
 	// Проверка на ошибку
 	if err != nil {
@@ -307,8 +307,19 @@ func SendMapInfo(botUrl string, update Update, beatmapset, id string) {
 
 	// Формирование текста респонса
 
-	responseText := "Информация о <b>" + response.Title + "</b>\n" +
-		"Автор <i>" + response.Artist + "</i>"
+	responseText := "Информация о <b>" + response.Title + "" + "</b>\n" +
+		"Автор <i>" + response.Artist + "</i>\n" +
+		"Маппер <i>" + response.Creator + "</i>\n" +
+		"В избранных у <b>" + response.FavoriteCount + "</b>\n" +
+		"Количество игр <b>" + response.PlayCount + "</b>\n"
+
+	if response.HypeRequired != "" {
+		responseText += "Хайп <b>" + response.HypeCurrent + "</b>/<b>" + response.HypeRequired + "</b>\n"
+	}
+
+	if response.Nsfw == "true" {
+		responseText += "NSFW карта\n"
+	}
 
 	SendPict(botUrl, update, SendPhoto{
 		PhotoUrl: response.Covers.List2X,
