@@ -96,28 +96,20 @@ type MapInfo struct {
 	HypeRequired       string             `json:"hype_required"`
 	Nsfw               string             `json:"nsfw"`
 	PlayCount          string             `json:"play_count"`
-	PreviewUrl         string             `json:"preview_url"`
-	Source             string             `json:"source"`
 	Spotlight          string             `json:"spotlight"`
 	Status             string             `json:"status"`
 	Title              string             `json:"title"`
-	UserId             string             `json:"user_id"`
 	Video              string             `json:"video"`
-	DownloadDisabled   string             `json:"download_disabled"`
 	Bpm                string             `json:"bpm"`
 	IsScoreable        string             `json:"is_scoreable"`
-	LastUpdated        string             `json:"last_updated"`
 	NominationsSummary NominationsSummary `json:"nominations_summary"`
 	Ranked             string             `json:"ranked"`
-	RankedDate         string             `json:"ranked_date"`
 	Storyboard         string             `json:"storyboard"`
-	Tags               []string           `json:"tags"`
 	GenreName          string             `json:"genre_name"`
 	LanguageName       string             `json:"language_name"`
 }
 
 type Covers struct {
-	List   string `json:"list"`
 	List2X string `json:"list@2x"`
 }
 
