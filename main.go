@@ -82,20 +82,20 @@ func respond(botUrl string, update mods.Update) {
 
 		switch request[0] {
 		case "/info":
-			mods.SendOsuInfo(botUrl, update, request[1])
+			mods.SendOsuInfo(botUrl, update.Message.Chat.ChatId, request[1])
 		case "/online":
-			mods.SendOnlineInfo(botUrl, update, request[1])
+			mods.SendOnlineInfo(botUrl, update.Message.Chat.ChatId, request[1])
 		case "/map":
-			mods.SendMapInfo(botUrl, update, request[1], request[2])
+			mods.SendMapInfo(botUrl, update.Message.Chat.ChatId, request[1], request[2])
 		default:
-			mods.SendMsg(botUrl, update, "OwO")
+			mods.SendMsg(botUrl, update.Message.Chat.ChatId, "OwO")
 		}
 
 	} else {
 
 		// Если пользователь отправил не сообщение и не стикер:
-		mods.SendMsg(botUrl, update, "Пока я воспринимаю только текст и стикеры")
-		mods.SendStck(botUrl, update, "CAACAgIAAxkBAAIaImHkPqF8-PQVOwh_Kv1qQxIFpPyfAAJXAAOtZbwUZ0fPMqXZ_GcjBA")
+		mods.SendMsg(botUrl, update.Message.Chat.ChatId, "Пока я воспринимаю только текст и стикеры")
+		mods.SendStck(botUrl, update.Message.Chat.ChatId, "CAACAgIAAxkBAAIaImHkPqF8-PQVOwh_Kv1qQxIFpPyfAAJXAAOtZbwUZ0fPMqXZ_GcjBA")
 
 	}
 }

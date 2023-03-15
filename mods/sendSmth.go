@@ -27,15 +27,14 @@ type SendPhoto struct {
 }
 
 // Функция отправки сообщения
-func SendMsg(botUrl string, update Update, msg string) error {
+func SendMsg(botUrl string, chatId int, msg string) error {
 
 	// Формирование сообщения
-	botMessage := SendMessage{
-		ChatId:    update.Message.Chat.ChatId,
+	buf, err := json.Marshal(SendMessage{
+		ChatId:    chatId,
 		Text:      msg,
 		ParseMode: "HTML",
-	}
-	buf, err := json.Marshal(botMessage)
+	})
 	if err != nil {
 		log.Printf("json.Marshal error: %s", err)
 		return err
@@ -51,14 +50,13 @@ func SendMsg(botUrl string, update Update, msg string) error {
 }
 
 // Функция отправки стикера
-func SendStck(botUrl string, update Update, url string) error {
+func SendStck(botUrl string, chatId int, url string) error {
 
 	// Формирование стикера
-	botStickerMessage := SendSticker{
-		ChatId:     update.Message.Chat.ChatId,
+	buf, err := json.Marshal(SendSticker{
+		ChatId:     chatId,
 		StickerUrl: url,
-	}
-	buf, err := json.Marshal(botStickerMessage)
+	})
 	if err != nil {
 		log.Printf("json.Marshal error: %s", err)
 		return err
@@ -73,14 +71,15 @@ func SendStck(botUrl string, update Update, url string) error {
 }
 
 // Функция отправки картинки
-func SendPict(botUrl string, update Update, pic SendPhoto) error {
-
-	// Указание парсмода текста под картинкой и айди чата
-	pic.ParseMode = "HTML"
-	pic.ChatId = update.Message.Chat.ChatId
+func SendPict(botUrl string, chatId int, photoUrl, caption string) error {
 
 	// Формирование картинки
-	buf, err := json.Marshal(pic)
+	buf, err := json.Marshal(SendPhoto{
+		ChatId:    chatId,
+		PhotoUrl:  photoUrl,
+		Caption:   caption,
+		ParseMode: "HTML",
+	})
 	if err != nil {
 		log.Printf("json.Marshal error: %s", err)
 		return err

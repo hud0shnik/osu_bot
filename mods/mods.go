@@ -120,7 +120,7 @@ type NominationsSummary struct {
 }
 
 // Функция вывода информации о пользователе
-func SendOsuInfo(botUrl string, update Update, username string) {
+func SendOsuInfo(botUrl string, chatId int, username string) {
 
 	// Значение по дефолту
 	if username == "" {
@@ -144,7 +144,7 @@ func SendOsuInfo(botUrl string, update Update, username string) {
 
 	// Проверка респонса
 	if !user.Success {
-		SendMsg(botUrl, update, user.Error)
+		SendMsg(botUrl, chatId, user.Error)
 		return
 	}
 
@@ -224,14 +224,12 @@ func SendOsuInfo(botUrl string, update Update, username string) {
 	}
 
 	// Отправка данных пользователю
-	SendPict(botUrl, update, SendPhoto{
-		PhotoUrl: user.AvatarUrl,
-		Caption:  responseText,
-	})
+	SendPict(botUrl, chatId, user.AvatarUrl, responseText)
+
 }
 
 // Функция вывода статуса пользователя в сети
-func SendOnlineInfo(botUrl string, update Update, username string) {
+func SendOnlineInfo(botUrl string, chatId int, username string) {
 
 	// Значение по дефолту
 	if username == "" {
@@ -255,24 +253,24 @@ func SendOnlineInfo(botUrl string, update Update, username string) {
 
 	// Проверка респонса
 	if !response.Success {
-		SendMsg(botUrl, update, response.Error)
+		SendMsg(botUrl, chatId, response.Error)
 		return
 	}
 
 	if response.Status {
-		SendMsg(botUrl, update, "Пользователь сейчас онлайн")
+		SendMsg(botUrl, chatId, "Пользователь сейчас онлайн")
 	} else {
-		SendMsg(botUrl, update, "Пользователь сейчас не в сети")
+		SendMsg(botUrl, chatId, "Пользователь сейчас не в сети")
 	}
 
 }
 
 // Функция отправки информации о карте
-func SendMapInfo(botUrl string, update Update, beatmapset, id string) {
+func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 
 	// Проверка параметров
 	if beatmapset == "" || id == "" {
-		SendMsg(botUrl, update, "Синтаксис команды:\n\n/map [beatmapset] [id]\n\nПример:\n/map <b>26154 89799</b>")
+		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map [beatmapset] [id]\n\nПример:\n/map <b>26154 89799</b>")
 		return
 	}
 
@@ -293,7 +291,7 @@ func SendMapInfo(botUrl string, update Update, beatmapset, id string) {
 
 	// Проверка респонса
 	if !response.Success {
-		SendMsg(botUrl, update, response.Error)
+		SendMsg(botUrl, chatId, response.Error)
 		return
 	}
 
@@ -340,16 +338,13 @@ func SendMapInfo(botUrl string, update Update, beatmapset, id string) {
 		responseText += "Карта со сторибордой"
 	}
 
-	SendPict(botUrl, update, SendPhoto{
-		PhotoUrl: response.Covers.List2X,
-		Caption:  responseText,
-	})
+	SendPict(botUrl, chatId, response.Covers.List2X, responseText)
 
 }
 
 // Функция вывода списка всех команд
-func Help(botUrl string, update Update) {
-	SendMsg(botUrl, update, "Привет👋🏻, вот список команд:"+"\n\n"+
+func Help(botUrl string, chatId int) {
+	SendMsg(botUrl, chatId, "Привет👋🏻, вот список команд:"+"\n\n"+
 		"/osu <u>username</u> - информация о пользователе Osu\n"+
 		"/online <u>username</u> - статус пользователя в сети")
 }
