@@ -82,7 +82,7 @@ type UserInfo struct {
 type OnlineInfo struct {
 	Success bool   `json:"success"`
 	Error   string `json:"error"`
-	Status  string `json:"status"`
+	Status  bool   `json:"status"`
 }
 
 type MapInfo struct {
@@ -259,7 +259,7 @@ func SendOnlineInfo(botUrl string, update Update, username string) {
 		return
 	}
 
-	if response.Status == "true" {
+	if response.Status {
 		SendMsg(botUrl, update, "Пользователь сейчас онлайн")
 	} else {
 		SendMsg(botUrl, update, "Пользователь сейчас не в сети")
