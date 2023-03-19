@@ -345,7 +345,8 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 // Функция вывода списка всех команд
 func Help(botUrl string, chatId int) {
 	SendMsg(botUrl, chatId, "Привет👋🏻, вот список команд:"+"\n\n"+
-		"/osu <u>username</u> - информация о пользователе Osu\n"+
+		"/info <u>username</u> - информация о пользователе Osu\n"+
+		"/map <u>beatmapset id</u> - информация о карте Osu\n"+
 		"/online <u>username</u> - статус пользователя в сети")
 }
 

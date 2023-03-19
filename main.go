@@ -87,6 +87,8 @@ func respond(botUrl string, update mods.Update) {
 			mods.SendOnlineInfo(botUrl, update.Message.Chat.ChatId, request[1])
 		case "/map":
 			mods.SendMapInfo(botUrl, update.Message.Chat.ChatId, request[1], request[2])
+		case "/start", "/help":
+			mods.Help(botUrl, update.Message.Chat.ChatId)
 		default:
 			mods.SendMsg(botUrl, update.Message.Chat.ChatId, "OwO")
 		}
