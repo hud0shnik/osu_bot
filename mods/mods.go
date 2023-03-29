@@ -122,9 +122,10 @@ type NominationsSummary struct {
 // Функция вывода информации о пользователе
 func SendOsuInfo(botUrl string, chatId int, username string) {
 
-	// Значение по дефолту
+	// Проверка параметра
 	if username == "" {
-		username = "hud0shnik"
+		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/info <b>[id]</b>\n\nПример:\n/info <b>hud0shnik</b>")
+		return
 	}
 
 	// Отправка запроса OsuStatsApi
@@ -231,9 +232,10 @@ func SendOsuInfo(botUrl string, chatId int, username string) {
 // Функция вывода статуса пользователя в сети
 func SendOnlineInfo(botUrl string, chatId int, username string) {
 
-	// Значение по дефолту
+	// Проверка параметра
 	if username == "" {
-		username = "hud0shnik"
+		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/online <b>[id]</b>\n\nПример:\n/online <b>hud0shnik</b>")
+		return
 	}
 
 	// Отправка запроса OsuStatsApi
@@ -270,7 +272,7 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 
 	// Проверка параметров
 	if beatmapset == "" || id == "" {
-		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map [beatmapset] [id]\n\nПример:\n/map <b>26154 89799</b>")
+		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map <b>[beatmapset] [id]</b>\n\nПример:\n/map <b>26154 89799</b>")
 		return
 	}
 
@@ -335,7 +337,7 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 	}
 
 	if response.Storyboard == "true" {
-		responseText += "Карта со сторибордой"
+		responseText += "Есть сториборда"
 	}
 
 	SendPict(botUrl, chatId, response.Covers.List2X, responseText)
