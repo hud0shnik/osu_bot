@@ -113,14 +113,13 @@ type Covers struct {
 	List2X string `json:"list@2x"`
 }
 
-// Оценка номинаций
 type NominationsSummary struct {
 	Current  string `json:"current"`
 	Required string `json:"required"`
 }
 
 // Функция вывода информации о пользователе
-func SendOsuInfo(botUrl string, chatId int, username string) {
+func SendUserInfo(botUrl string, chatId int, username string) {
 
 	// Проверка параметра
 	if username == "" {

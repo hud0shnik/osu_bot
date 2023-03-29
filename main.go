@@ -82,7 +82,7 @@ func respond(botUrl string, update mods.Update) {
 
 		switch request[0] {
 		case "/info":
-			mods.SendOsuInfo(botUrl, update.Message.Chat.ChatId, request[1])
+			mods.SendUserInfo(botUrl, update.Message.Chat.ChatId, request[1])
 		case "/online":
 			mods.SendOnlineInfo(botUrl, update.Message.Chat.ChatId, request[1])
 		case "/map":
