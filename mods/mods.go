@@ -325,15 +325,15 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 	}
 
 	if response.Video == "true" {
-		responseText += "Карта с видео\n"
+		responseText += "Есть видео\n"
 	}
 
 	if response.IsScoreable == "true" {
-		responseText += "Карта с таблицей рекордов\n"
+		responseText += "Есть таблица рекордов\n"
 	}
 
 	if response.Ranked == "1" {
-		responseText += "Рейтинговая карта\n"
+		responseText += "Рейтинговая\n"
 	}
 
 	if response.Storyboard == "true" {
