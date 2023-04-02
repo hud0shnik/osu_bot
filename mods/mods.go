@@ -128,7 +128,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 	}
 
 	// Отправка запроса OsuStatsApi
-	resp, err := http.Get("https://osustatsapi.vercel.app/api/user?type=string&id=" + username)
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/user?type=string&id=" + username)
 
 	// Проверка на ошибку
 	if err != nil {
@@ -143,7 +143,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 	json.Unmarshal(body, &user)
 
 	// Проверка респонса
-	if !user.Success {
+	if resp.StatusCode != 200 {
 		SendMsg(botUrl, chatId, user.Error)
 		return
 	}
@@ -152,7 +152,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 
 	responseText := "Информация о <b>" + user.Username + "</b>\n"
 
-	if user.Names != nil {
+	if len(user.Names) != 0 {
 		responseText += "Aka " + user.Names[0] + "\n"
 	}
 
@@ -238,7 +238,7 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 	}
 
 	// Отправка запроса OsuStatsApi
-	resp, err := http.Get("https://osustatsapi.vercel.app/api/online?id=" + username)
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/online?id=" + username)
 
 	// Проверка на ошибку
 	if err != nil {
@@ -253,7 +253,7 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 	json.Unmarshal(body, &response)
 
 	// Проверка респонса
-	if !response.Success {
+	if resp.StatusCode != 200 {
 		SendMsg(botUrl, chatId, response.Error)
 		return
 	}
@@ -276,7 +276,7 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 	}
 
 	// Отправка запроса OsuStatsApi
-	resp, err := http.Get("https://osustatsapi.vercel.app/api/map?type=string&beatmapset=" + beatmapset + "&id=" + id)
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/map?type=string&beatmapset=" + beatmapset + "&id=" + id)
 
 	// Проверка на ошибку
 	if err != nil {
@@ -291,7 +291,7 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 	json.Unmarshal(body, &response)
 
 	// Проверка респонса
-	if !response.Success {
+	if resp.StatusCode != 200 {
 		SendMsg(botUrl, chatId, response.Error)
 		return
 	}
