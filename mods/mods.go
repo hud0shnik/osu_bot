@@ -136,17 +136,12 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 		log.Printf("http.Get error: %s", err)
 		return
 	}
-
-	// Запись респонса
 	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-	var user = new(UserInfo)
-	json.Unmarshal(body, &user)
 
 	// Проверка респонса
 	switch resp.StatusCode {
 	case 200:
-		// При хорошем статусе респонса, продолжение выполнения кода
+		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
 		SendMsg(botUrl, chatId, "Пользователь не найден")
 		return
@@ -157,6 +152,11 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 		SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		return
 	}
+
+	// Запись респонса
+	body, _ := ioutil.ReadAll(resp.Body)
+	var user = new(UserInfo)
+	json.Unmarshal(body, &user)
 
 	// Формирование текста респонса
 
@@ -256,17 +256,12 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 		log.Printf("http.Get error: %s", err)
 		return
 	}
-
-	// Запись респонса
 	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-	var response = new(OnlineInfo)
-	json.Unmarshal(body, &response)
 
 	// Проверка респонса
 	switch resp.StatusCode {
 	case 200:
-		// При хорошем статусе респонса, продолжение выполнения кода
+		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
 		SendMsg(botUrl, chatId, "Пользователь не найден")
 		return
@@ -277,6 +272,11 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 		SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		return
 	}
+
+	// Запись респонса
+	body, _ := ioutil.ReadAll(resp.Body)
+	var response = new(OnlineInfo)
+	json.Unmarshal(body, &response)
 
 	if response.Status {
 		SendMsg(botUrl, chatId, "Пользователь сейчас онлайн")
@@ -304,17 +304,12 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 		log.Printf("http.Get error: %s", err)
 		return
 	}
-
-	// Запись респонса
 	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-	var response = new(MapInfo)
-	json.Unmarshal(body, &response)
 
 	// Проверка респонса
 	switch resp.StatusCode {
 	case 200:
-		// При хорошем статусе респонса, продолжение выполнения кода
+		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
 		SendMsg(botUrl, chatId, "Пользователь не найден")
 		return
@@ -325,6 +320,11 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 		SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		return
 	}
+
+	// Запись респонса
+	body, _ := ioutil.ReadAll(resp.Body)
+	var response = new(MapInfo)
+	json.Unmarshal(body, &response)
 
 	// Формирование текста респонса
 
