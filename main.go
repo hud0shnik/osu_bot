@@ -12,37 +12,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-func main() {
+// Функция инициализации конфига (всех токенов)
+func initConfig() error {
+	viper.AddConfigPath("configs")
+	viper.SetConfigName("config")
 
-	// Инициализация конфига (токенов)
-	err := mods.InitConfig()
-	if err != nil {
-		log.Fatalf("initConfig error: %s", err)
-		return
-	}
-
-	// Url бота для отправки и приёма сообщений
-	botUrl := "https://api.telegram.org/bot" + viper.GetString("token")
-	offSet := 0
-
-	// Цикл работы бота
-	for {
-
-		// Получение апдейтов
-		updates, err := getUpdates(botUrl, offSet)
-		if err != nil {
-			log.Fatalf("getUpdates error: %s", err)
-		}
-
-		// Обработка апдейтов
-		for _, update := range updates {
-			respond(botUrl, update)
-			offSet = update.UpdateId + 1
-		}
-
-		// Вывод в консоль для тестов
-		// fmt.Println(updates)
-	}
+	return viper.ReadInConfig()
 }
 
 // Функция получения апдейтов
@@ -99,5 +74,38 @@ func respond(botUrl string, update mods.Update) {
 		mods.SendMsg(botUrl, update.Message.Chat.ChatId, "Пока я воспринимаю только текст и стикеры")
 		mods.SendStck(botUrl, update.Message.Chat.ChatId, "CAACAgIAAxkBAAIaImHkPqF8-PQVOwh_Kv1qQxIFpPyfAAJXAAOtZbwUZ0fPMqXZ_GcjBA")
 
+	}
+}
+
+func main() {
+
+	// Инициализация конфига (токенов)
+	err := initConfig()
+	if err != nil {
+		log.Fatalf("initConfig error: %s", err)
+		return
+	}
+
+	// Url бота для отправки и приёма сообщений
+	botUrl := "https://api.telegram.org/bot" + viper.GetString("token")
+	offSet := 0
+
+	// Цикл работы бота
+	for {
+
+		// Получение апдейтов
+		updates, err := getUpdates(botUrl, offSet)
+		if err != nil {
+			log.Fatalf("getUpdates error: %s", err)
+		}
+
+		// Обработка апдейтов
+		for _, update := range updates {
+			respond(botUrl, update)
+			offSet = update.UpdateId + 1
+		}
+
+		// Вывод в консоль для тестов
+		// fmt.Println(updates)
 	}
 }

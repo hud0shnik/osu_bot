@@ -5,8 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-
-	"github.com/spf13/viper"
 )
 
 // Структуры для работы с Telegram API
@@ -379,12 +377,4 @@ func Help(botUrl string, chatId int) {
 		"/info <u>username</u> - информация о пользователе Osu\n"+
 		"/map <u>beatmapset id</u> - информация о карте Osu\n"+
 		"/online <u>username</u> - статус пользователя в сети")
-}
-
-// Функция инициализации конфига (всех токенов)
-func InitConfig() error {
-	viper.AddConfigPath("configs")
-	viper.SetConfigName("config")
-
-	return viper.ReadInConfig()
 }
