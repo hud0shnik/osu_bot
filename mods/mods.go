@@ -9,7 +9,7 @@ import (
 
 // Структуры для работы с OsuStatsApi
 
-type UserInfo struct {
+type userInfo struct {
 	Success        bool     `json:"success"`
 	Error          string   `json:"error"`
 	Username       string   `json:"username"`
@@ -52,17 +52,17 @@ type UserInfo struct {
 	Medals         string   `json:"medals"`
 }
 
-type OnlineInfo struct {
+type onlineInfo struct {
 	Success bool   `json:"success"`
 	Error   string `json:"error"`
 	Status  bool   `json:"status"`
 }
 
-type MapInfo struct {
+type mapInfo struct {
 	Success            bool               `json:"success"`
 	Error              string             `json:"error"`
 	Artist             string             `json:"artist"`
-	Covers             Covers             `json:"covers"`
+	Covers             covers             `json:"covers"`
 	Creator            string             `json:"creator"`
 	FavoriteCount      string             `json:"favorite_count"`
 	HypeCurrent        string             `json:"hype_current"`
@@ -75,18 +75,18 @@ type MapInfo struct {
 	Video              string             `json:"video"`
 	Bpm                string             `json:"bpm"`
 	IsScoreable        string             `json:"is_scoreable"`
-	NominationsSummary NominationsSummary `json:"nominations_summary"`
+	NominationsSummary nominationsSummary `json:"nominations_summary"`
 	Ranked             string             `json:"ranked"`
 	Storyboard         string             `json:"storyboard"`
 	GenreName          string             `json:"genre_name"`
 	LanguageName       string             `json:"language_name"`
 }
 
-type Covers struct {
+type covers struct {
 	List2X string `json:"list@2x"`
 }
 
-type NominationsSummary struct {
+type nominationsSummary struct {
 	Current  string `json:"current"`
 	Required string `json:"required"`
 }
@@ -128,7 +128,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 
 	// Запись респонса
 	body, _ := ioutil.ReadAll(resp.Body)
-	var user = new(UserInfo)
+	var user = new(userInfo)
 	json.Unmarshal(body, &user)
 
 	// Формирование текста респонса
@@ -248,7 +248,7 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 
 	// Запись респонса
 	body, _ := ioutil.ReadAll(resp.Body)
-	var response = new(OnlineInfo)
+	var response = new(onlineInfo)
 	json.Unmarshal(body, &response)
 
 	if response.Status {
@@ -296,7 +296,7 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 
 	// Запись респонса
 	body, _ := ioutil.ReadAll(resp.Body)
-	var response = new(MapInfo)
+	var response = new(mapInfo)
 	json.Unmarshal(body, &response)
 
 	// Формирование текста респонса
