@@ -7,31 +7,6 @@ import (
 	"net/http"
 )
 
-// Структуры для работы с Telegram API
-
-type TelegramResponse struct {
-	Result []Update `json:"result"`
-}
-
-type Update struct {
-	UpdateId int     `json:"update_id"`
-	Message  Message `json:"message"`
-}
-
-type Message struct {
-	Chat    Chat    `json:"chat"`
-	Text    string  `json:"text"`
-	Sticker Sticker `json:"sticker"`
-}
-
-type Chat struct {
-	ChatId int `json:"id"`
-}
-
-type Sticker struct {
-	File_id string `json:"file_id"`
-}
-
 // Структуры для работы с OsuStatsApi
 
 type UserInfo struct {

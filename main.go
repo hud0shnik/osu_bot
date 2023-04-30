@@ -12,16 +12,33 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Функция инициализации конфига (всех токенов)
-func initConfig() error {
-	viper.AddConfigPath("configs")
-	viper.SetConfigName("config")
+// Структуры для работы с Telegram API
 
-	return viper.ReadInConfig()
+type telegramResponse struct {
+	Result []update `json:"result"`
+}
+
+type update struct {
+	UpdateId int     `json:"update_id"`
+	Message  message `json:"message"`
+}
+
+type message struct {
+	Chat    chat    `json:"chat"`
+	Text    string  `json:"text"`
+	Sticker sticker `json:"sticker"`
+}
+
+type chat struct {
+	ChatId int `json:"id"`
+}
+
+type sticker struct {
+	File_id string `json:"file_id"`
 }
 
 // Функция получения апдейтов
-func getUpdates(botUrl string, offset int) ([]mods.Update, error) {
+func getUpdates(botUrl string, offset int) ([]update, error) {
 
 	// Rest запрос для получения апдейтов
 	resp, err := http.Get(botUrl + "/getUpdates?offset=" + strconv.Itoa(offset))
@@ -35,7 +52,7 @@ func getUpdates(botUrl string, offset int) ([]mods.Update, error) {
 	if err != nil {
 		return nil, err
 	}
-	var restResponse mods.TelegramResponse
+	var restResponse telegramResponse
 	err = json.Unmarshal(body, &restResponse)
 	if err != nil {
 		return nil, err
@@ -45,7 +62,7 @@ func getUpdates(botUrl string, offset int) ([]mods.Update, error) {
 }
 
 // Функция генерации и отправки ответа
-func respond(botUrl string, update mods.Update) {
+func respond(botUrl string, update update) {
 
 	// Обработчик команд
 	if update.Message.Text != "" {
@@ -108,4 +125,12 @@ func main() {
 		// Вывод в консоль для тестов
 		// fmt.Println(updates)
 	}
+}
+
+// Функция инициализации конфига (всех токенов)
+func initConfig() error {
+	viper.AddConfigPath("configs")
+	viper.SetConfigName("config")
+
+	return viper.ReadInConfig()
 }
