@@ -64,34 +64,29 @@ func getUpdates(botUrl string, offset int) ([]update, error) {
 // Функция генерации и отправки ответа
 func respond(botUrl string, update update) {
 
-	// Обработчик команд
-	if update.Message.Text != "" {
-
-		request := append(strings.Split(update.Message.Text, " "), "", "")
-
-		// Вывод реквеста для тестов
-		// fmt.Println("request: \t", request)
-
-		switch request[0] {
-		case "/info":
-			mods.SendUserInfo(botUrl, update.Message.Chat.ChatId, request[1])
-		case "/online":
-			mods.SendOnlineInfo(botUrl, update.Message.Chat.ChatId, request[1])
-		case "/map":
-			mods.SendMapInfo(botUrl, update.Message.Chat.ChatId, request[1], request[2])
-		case "/start", "/help":
-			mods.Help(botUrl, update.Message.Chat.ChatId)
-		default:
-			mods.SendMsg(botUrl, update.Message.Chat.ChatId, "OwO")
-		}
-
-	} else {
-
-		// Если пользователь отправил не сообщение и не стикер:
-		mods.SendMsg(botUrl, update.Message.Chat.ChatId, "Пока я воспринимаю только текст и стикеры")
-		mods.SendStck(botUrl, update.Message.Chat.ChatId, "CAACAgIAAxkBAAIaImHkPqF8-PQVOwh_Kv1qQxIFpPyfAAJXAAOtZbwUZ0fPMqXZ_GcjBA")
-
+	// Проверка на сообщение
+	if update.Message.Text == "" {
+		mods.SendMsg(botUrl, update.Message.Chat.ChatId, "Пока я воспринимаю только текст")
+		return
 	}
+
+	// Разделение текста пользователя на слайс
+	request := append(strings.Split(update.Message.Text, " "), "", "")
+
+	// Обработчик команд
+	switch request[0] {
+	case "/info":
+		mods.SendUserInfo(botUrl, update.Message.Chat.ChatId, request[1])
+	case "/online":
+		mods.SendOnlineInfo(botUrl, update.Message.Chat.ChatId, request[1])
+	case "/map":
+		mods.SendMapInfo(botUrl, update.Message.Chat.ChatId, request[1], request[2])
+	case "/start", "/help":
+		mods.Help(botUrl, update.Message.Chat.ChatId)
+	default:
+		mods.SendMsg(botUrl, update.Message.Chat.ChatId, "OwO")
+	}
+
 }
 
 func main() {
