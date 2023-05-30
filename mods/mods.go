@@ -10,8 +10,6 @@ import (
 // Структуры для работы с OsuStatsApi
 
 type userInfo struct {
-	Success        bool     `json:"success"`
-	Error          string   `json:"error"`
 	Username       string   `json:"username"`
 	Names          []string `json:"previous_usernames"`
 	AvatarUrl      string   `json:"avatar_url"`
@@ -53,14 +51,10 @@ type userInfo struct {
 }
 
 type onlineInfo struct {
-	Success bool   `json:"success"`
-	Error   string `json:"error"`
-	Status  bool   `json:"status"`
+	Status bool `json:"status"`
 }
 
 type mapInfo struct {
-	Success            bool               `json:"success"`
-	Error              string             `json:"error"`
 	Artist             string             `json:"artist"`
 	Covers             covers             `json:"covers"`
 	Creator            string             `json:"creator"`
