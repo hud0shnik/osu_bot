@@ -77,6 +77,8 @@ func respond(botUrl string, update update) {
 	switch request[0] {
 	case "/info":
 		mods.SendUserInfo(botUrl, update.Message.Chat.ChatId, request[1])
+	case "/recent":
+		mods.SendRecentBeatmap(botUrl, update.Message.Chat.ChatId, request[1])
 	case "/online":
 		mods.SendOnlineInfo(botUrl, update.Message.Chat.ChatId, request[1])
 	case "/map":

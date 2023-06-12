@@ -72,6 +72,7 @@ func SendStck(botUrl string, chatId int, url string) error {
 	}
 
 	return nil
+
 }
 
 // Функция отправки картинки

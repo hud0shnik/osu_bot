@@ -85,6 +85,17 @@ type nominationsSummary struct {
 	Required string `json:"required"`
 }
 
+type activity struct {
+	CreatedAt    string `json:"created_at"`
+	Type         string `json:"type"`
+	ScoreRank    string `json:"score_rank"`
+	Rank         string `json:"rank"`
+	Mode         string `json:"mode"`
+	BeatmapTitle string `json:"beatmap_title"`
+	BeatmapUrl   string `json:"beatmap_url"`
+	BeatmapId    string `json:"beatmap_id"`
+}
+
 // Функция вывода информации о пользователе
 func SendUserInfo(botUrl string, chatId int, username string) {
 
@@ -256,14 +267,19 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 // Функция отправки информации о карте
 func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 
-	// Проверка параметров
-	if beatmapset == "" || id == "" {
-		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map <b>[beatmapset] [id]</b>\n\nПример:\n/map <b>26154 89799</b>")
+	// Проверка на пропуск параметра
+	if beatmapset == "_" || beatmapset == "." {
+		beatmapset = ""
+	}
+
+	// Проверка id
+	if id == "" {
+		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map <b>[beatmapset] [id]</b>\nПараметр beatmapset можно пропустить через \".\" или \".\"\n\nПример:\n/map <b>26154 89799</b>\n/map <b>. 89799</b>")
 		return
 	}
 
 	// Отправка запроса OsuStatsApi
-	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/map?type=string&beatmapset=" + beatmapset + "&id=" + id)
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/map?type=string&id=" + id + "&beatmapset=" + beatmapset)
 
 	// Проверка на ошибку
 	if err != nil {
@@ -278,7 +294,7 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 	case 200:
 		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
-		SendMsg(botUrl, chatId, "Пользователь не найден")
+		SendMsg(botUrl, chatId, "Карта не найдена")
 		return
 	case 400:
 		SendMsg(botUrl, chatId, "Плохой реквест")
@@ -340,10 +356,65 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 
 }
 
+// Функция отправки последней сыгранной карты
+func SendRecentBeatmap(botUrl string, chatId int, username string) {
+
+	// Проверка параметра
+	if username == "" {
+		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/recent <b>[id]</b>\n\nПример:\n/recent <b>hud0shnik</b>")
+		return
+	}
+
+	// Отправка запроса OsuStatsApi
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/user?type=string&id=" + username)
+
+	// Проверка на ошибку
+	if err != nil {
+		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		log.Printf("http.Get error: %s", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// Проверка респонса
+	switch resp.StatusCode {
+	case 200:
+		// При хорошем статусе респонса продолжение выполнения кода
+	case 404:
+		SendMsg(botUrl, chatId, "Пользователь не найден")
+		return
+	case 400:
+		SendMsg(botUrl, chatId, "Плохой реквест")
+		return
+	default:
+		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		return
+	}
+
+	// Запись респонса
+	body, _ := ioutil.ReadAll(resp.Body)
+	var response = new(struct {
+		Username       string     `json:"username"`
+		RecentActivity []activity `json:"recent_activity"`
+	})
+	json.Unmarshal(body, &response)
+
+	if len(response.RecentActivity) == 0 {
+		SendMsg(botUrl, chatId, "Пользователь <i>"+response.Username+"</i> не играл карты за последние 24 часа")
+		return
+	}
+
+	recentBeatmap := response.RecentActivity[0]
+	SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+response.Username+"</i> - <b>"+recentBeatmap.BeatmapTitle+"</b>")
+	SendMapInfo(botUrl, chatId, "", recentBeatmap.BeatmapId)
+
+}
+
 // Функция вывода списка всех команд
 func Help(botUrl string, chatId int) {
 	SendMsg(botUrl, chatId, "Привет👋🏻, вот список команд:"+"\n\n"+
 		"/info <u>username</u> - информация о пользователе Osu\n"+
+		"/recent <u>username</u> - последняя сыгранная карта пользователя\n"+
 		"/map <u>beatmapset id</u> - информация о карте Osu\n"+
 		"/online <u>username</u> - статус пользователя в сети")
 }
