@@ -280,9 +280,9 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 		beatmapset = ""
 	}
 
-	// Проверка id
+	// Проверка на пустой id
 	if id == "" {
-		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map <b>[beatmapset] [id]</b>\nПараметр beatmapset можно пропустить через \".\" или \".\"\n\nПример:\n/map <b>26154 89799</b>\n/map <b>. 89799</b>")
+		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map <b>[beatmapset] [id]</b>\nПараметр beatmapset можно пропустить через \".\" или \"_\"\n\nПример:\n/map <b>26154 89799</b>\n/map <b>. 89799</b>")
 		return
 	}
 
