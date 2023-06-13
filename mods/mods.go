@@ -85,15 +85,23 @@ type nominationsSummary struct {
 	Required string `json:"required"`
 }
 
-type activity struct {
-	CreatedAt    string `json:"created_at"`
-	Type         string `json:"type"`
-	ScoreRank    string `json:"score_rank"`
-	Rank         string `json:"rank"`
-	Mode         string `json:"mode"`
-	BeatmapTitle string `json:"beatmap_title"`
-	BeatmapUrl   string `json:"beatmap_url"`
-	BeatmapId    string `json:"beatmap_id"`
+type historicalResponse struct {
+	Recent struct {
+		Items []recent `json:"items"`
+	} `json:"recent"`
+}
+
+type recent struct {
+	BeatmapID string `json:"beatmap_id"`
+	Passed    string `json:"passed"`
+	Rank      string `json:"rank"`
+	PP        string `json:"pp"`
+	Beatmap   struct {
+		URL string `json:"url"`
+	} `json:"beatmap"`
+	Beatmapset struct {
+		Title string `json:"title"`
+	} `json:"beatmapset"`
 }
 
 // Функция вывода информации о пользователе
@@ -365,10 +373,8 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 		return
 	}
 
-	// Отправка запроса OsuStatsApi
+	// Отправка запроса OsuStatsApi для поиска пользователя
 	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/user?type=string&id=" + username)
-
-	// Проверка на ошибку
 	if err != nil {
 		SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		log.Printf("http.Get error: %s", err)
@@ -393,20 +399,43 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 
 	// Запись респонса
 	body, _ := ioutil.ReadAll(resp.Body)
-	var response = new(struct {
-		Username       string     `json:"username"`
-		RecentActivity []activity `json:"recent_activity"`
+	var user = new(struct {
+		ID       string `json:"id"`
+		Username string `json:"username"`
 	})
-	json.Unmarshal(body, &response)
+	json.Unmarshal(body, &user)
 
-	if len(response.RecentActivity) == 0 {
-		SendMsg(botUrl, chatId, "Пользователь <i>"+response.Username+"</i> не играл карты за последние 24 часа")
+	// Отправка запроса OsuStatsApi для получения последней активности
+	resp2, err := http.Get("https://osustatsapi.vercel.app/api/v2/historical?type=string&id=" + user.ID)
+	if err != nil {
+		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		log.Printf("http.Get error: %s", err)
+		return
+	}
+	defer resp2.Body.Close()
+
+	// Запись респонса
+	body, _ = ioutil.ReadAll(resp2.Body)
+	var historical historicalResponse
+	json.Unmarshal(body, &historical)
+
+	// Проверка на наличие активности
+	if len(historical.Recent.Items) == 0 {
+		SendMsg(botUrl, chatId, "Пользователь <i>"+user.Username+"</i> не играл карты за последние 24 часа")
 		return
 	}
 
-	recentBeatmap := response.RecentActivity[0]
-	SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+response.Username+"</i> - <b>"+recentBeatmap.BeatmapTitle+"</b>\n"+recentBeatmap.BeatmapUrl)
-	SendMapInfo(botUrl, chatId, "", recentBeatmap.BeatmapId)
+	// Вывод информации о последней сыгранной карте
+	recentScore := historical.Recent.Items[0]
+	SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+user.Username+"</i> - <b>"+recentScore.Beatmapset.Title+"</b>\n"+recentScore.Beatmap.URL)
+	SendMapInfo(botUrl, chatId, "", recentScore.BeatmapID)
+
+	// Проверка на результат игры
+	if recentScore.Passed == "true" {
+		SendMsg(botUrl, chatId, "<i>"+user.Username+"</i> прошёл её на <b>"+recentScore.Rank+"</b> получив <b>"+recentScore.PP+"</b> pp")
+	} else {
+		SendMsg(botUrl, chatId, "<i>"+user.Username+"</i> не прошёл её :^(")
+	}
 
 }
 
