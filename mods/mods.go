@@ -405,7 +405,7 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	}
 
 	recentBeatmap := response.RecentActivity[0]
-	SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+response.Username+"</i> - <b>"+recentBeatmap.BeatmapTitle+"</b>")
+	SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+response.Username+"</i> - <b>"+recentBeatmap.BeatmapTitle+"</b>\n"+recentBeatmap.BeatmapUrl)
 	SendMapInfo(botUrl, chatId, "", recentBeatmap.BeatmapId)
 
 }
