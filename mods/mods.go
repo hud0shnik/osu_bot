@@ -97,7 +97,9 @@ type recent struct {
 	Rank      string `json:"rank"`
 	PP        string `json:"pp"`
 	Beatmap   struct {
-		URL string `json:"url"`
+		URL              string `json:"url"`
+		DifficultyRating string `json:"difficulty_rating"`
+		Version          string `json:"version"`
 	} `json:"beatmap"`
 	Beatmapset struct {
 		Title string `json:"title"`
@@ -427,7 +429,9 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 
 	// Вывод информации о последней сыгранной карте
 	recentScore := historical.Recent.Items[0]
-	SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+user.Username+"</i> - <b>"+recentScore.Beatmapset.Title+"</b>\n"+recentScore.Beatmap.URL)
+	SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+user.Username+
+		"</i> - <b>"+recentScore.Beatmapset.Title+"</b>\nНа сложности <b>"+
+		recentScore.Beatmap.Version+"</b> <i>("+recentScore.Beatmap.DifficultyRating+")</i>\n"+recentScore.Beatmap.URL)
 	SendMapInfo(botUrl, chatId, "", recentScore.BeatmapID)
 
 	// Проверка на результат игры
