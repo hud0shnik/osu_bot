@@ -3,8 +3,9 @@ package mods
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	"github.com/sirupsen/logrus"
 )
 
 // Структуры для работы с OsuStatsApi
@@ -121,7 +122,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 	// Проверка на ошибку
 	if err != nil {
 		SendMsg(botUrl, chatId, "Внутренняя ошибка")
-		log.Printf("http.Get error: %s", err)
+		logrus.Printf("http.Get error: %s", err)
 		return
 	}
 	defer resp.Body.Close()
@@ -241,7 +242,7 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 	// Проверка на ошибку
 	if err != nil {
 		SendMsg(botUrl, chatId, "Внутренняя ошибка")
-		log.Printf("http.Get error: %s", err)
+		logrus.Printf("http.Get error: %s", err)
 		return
 	}
 	defer resp.Body.Close()
@@ -294,7 +295,7 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 	// Проверка на ошибку
 	if err != nil {
 		SendMsg(botUrl, chatId, "Внутренняя ошибка")
-		log.Printf("http.Get error: %s", err)
+		logrus.Printf("http.Get error: %s", err)
 		return
 	}
 	defer resp.Body.Close()
@@ -379,7 +380,7 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/user?type=string&id=" + username)
 	if err != nil {
 		SendMsg(botUrl, chatId, "Внутренняя ошибка")
-		log.Printf("http.Get error: %s", err)
+		logrus.Printf("http.Get error: %s", err)
 		return
 	}
 	defer resp.Body.Close()
@@ -411,7 +412,7 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	resp2, err := http.Get("https://osustatsapi.vercel.app/api/v2/historical?type=string&id=" + user.ID)
 	if err != nil {
 		SendMsg(botUrl, chatId, "Внутренняя ошибка")
-		log.Printf("http.Get error: %s", err)
+		logrus.Printf("http.Get error: %s", err)
 		return
 	}
 	defer resp2.Body.Close()

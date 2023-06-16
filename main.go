@@ -3,12 +3,12 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
 
 	"github.com/hud0shnik/osu_bot/mods"
+	"github.com/sirupsen/logrus"
 
 	"github.com/spf13/viper"
 )
@@ -92,10 +92,13 @@ func respond(botUrl string, update update) {
 
 func main() {
 
+	// Настройка логгера
+	logrus.SetFormatter(&logrus.JSONFormatter{})
+
 	// Инициализация конфига (токенов)
 	err := initConfig()
 	if err != nil {
-		log.Fatalf("initConfig error: %s", err)
+		logrus.Fatalf("initConfig error: %s", err)
 		return
 	}
 
@@ -109,7 +112,7 @@ func main() {
 		// Получение апдейтов
 		updates, err := getUpdates(botUrl, offSet)
 		if err != nil {
-			log.Fatalf("getUpdates error: %s", err)
+			logrus.Fatalf("getUpdates error: %s", err)
 		}
 
 		// Обработка апдейтов
