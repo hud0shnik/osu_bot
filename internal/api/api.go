@@ -1,10 +1,11 @@
-package mods
+package api
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 
+	"github.com/hud0shnik/osu_bot/internal/send"
 	"github.com/sirupsen/logrus"
 )
 
@@ -112,7 +113,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 
 	// Проверка параметра
 	if username == "" {
-		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/info <b>[id]</b>\n\nПример:\n/info <b>hud0shnik</b>")
+		send.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/info <b>[id]</b>\n\nПример:\n/info <b>hud0shnik</b>")
 		return
 	}
 
@@ -121,7 +122,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 
 	// Проверка на ошибку
 	if err != nil {
-		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
 		return
 	}
@@ -132,13 +133,13 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 	case 200:
 		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
-		SendMsg(botUrl, chatId, "Пользователь не найден")
+		send.SendMsg(botUrl, chatId, "Пользователь не найден")
 		return
 	case 400:
-		SendMsg(botUrl, chatId, "Плохой реквест")
+		send.SendMsg(botUrl, chatId, "Плохой реквест")
 		return
 	default:
-		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		return
 	}
 
@@ -223,7 +224,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 	}
 
 	// Отправка данных пользователю
-	SendPict(botUrl, chatId, user.AvatarUrl, responseText)
+	send.SendPict(botUrl, chatId, user.AvatarUrl, responseText)
 
 }
 
@@ -232,7 +233,7 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 
 	// Проверка параметра
 	if username == "" {
-		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/online <b>[id]</b>\n\nПример:\n/online <b>hud0shnik</b>")
+		send.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/online <b>[id]</b>\n\nПример:\n/online <b>hud0shnik</b>")
 		return
 	}
 
@@ -241,7 +242,7 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 
 	// Проверка на ошибку
 	if err != nil {
-		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
 		return
 	}
@@ -252,13 +253,13 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 	case 200:
 		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
-		SendMsg(botUrl, chatId, "Пользователь не найден")
+		send.SendMsg(botUrl, chatId, "Пользователь не найден")
 		return
 	case 400:
-		SendMsg(botUrl, chatId, "Плохой реквест")
+		send.SendMsg(botUrl, chatId, "Плохой реквест")
 		return
 	default:
-		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		return
 	}
 
@@ -268,9 +269,9 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 	json.Unmarshal(body, &response)
 
 	if response.Status {
-		SendMsg(botUrl, chatId, "Пользователь сейчас онлайн")
+		send.SendMsg(botUrl, chatId, "Пользователь сейчас онлайн")
 	} else {
-		SendMsg(botUrl, chatId, "Пользователь сейчас не в сети")
+		send.SendMsg(botUrl, chatId, "Пользователь сейчас не в сети")
 	}
 
 }
@@ -285,7 +286,7 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 
 	// Проверка на пустой id
 	if id == "" {
-		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map <b>[beatmapset] [id]</b>\nПараметр beatmapset можно пропустить через \".\" или \"_\"\n\nПример:\n/map <b>26154 89799</b>\n/map <b>. 89799</b>")
+		send.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map <b>[beatmapset] [id]</b>\nПараметр beatmapset можно пропустить через \".\" или \"_\"\n\nПример:\n/map <b>26154 89799</b>\n/map <b>. 89799</b>")
 		return
 	}
 
@@ -294,7 +295,7 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 
 	// Проверка на ошибку
 	if err != nil {
-		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
 		return
 	}
@@ -305,13 +306,13 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 	case 200:
 		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
-		SendMsg(botUrl, chatId, "Карта не найдена")
+		send.SendMsg(botUrl, chatId, "Карта не найдена")
 		return
 	case 400:
-		SendMsg(botUrl, chatId, "Плохой реквест")
+		send.SendMsg(botUrl, chatId, "Плохой реквест")
 		return
 	default:
-		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		return
 	}
 
@@ -363,7 +364,7 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 		responseText += "Есть сториборда"
 	}
 
-	SendPict(botUrl, chatId, response.Covers.List2X, responseText)
+	send.SendPict(botUrl, chatId, response.Covers.List2X, responseText)
 
 }
 
@@ -372,14 +373,14 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 
 	// Проверка параметра
 	if username == "" {
-		SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/recent <b>[id]</b>\n\nПример:\n/recent <b>hud0shnik</b>")
+		send.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/recent <b>[id]</b>\n\nПример:\n/recent <b>hud0shnik</b>")
 		return
 	}
 
 	// Отправка запроса OsuStatsApi для поиска пользователя
 	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/user?type=string&id=" + username)
 	if err != nil {
-		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
 		return
 	}
@@ -390,13 +391,13 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	case 200:
 		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
-		SendMsg(botUrl, chatId, "Пользователь не найден")
+		send.SendMsg(botUrl, chatId, "Пользователь не найден")
 		return
 	case 400:
-		SendMsg(botUrl, chatId, "Плохой реквест")
+		send.SendMsg(botUrl, chatId, "Плохой реквест")
 		return
 	default:
-		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		return
 	}
 
@@ -411,7 +412,7 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	// Отправка запроса OsuStatsApi для получения последней активности
 	resp2, err := http.Get("https://osustatsapi.vercel.app/api/v2/historical?type=string&id=" + user.ID)
 	if err != nil {
-		SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
 		return
 	}
@@ -424,31 +425,22 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 
 	// Проверка на наличие активности
 	if len(historical.Recent.Items) == 0 {
-		SendMsg(botUrl, chatId, "Пользователь <i>"+user.Username+"</i> не играл карты за последние 24 часа")
+		send.SendMsg(botUrl, chatId, "Пользователь <i>"+user.Username+"</i> не играл карты за последние 24 часа")
 		return
 	}
 
 	// Вывод информации о последней сыгранной карте
 	recentScore := historical.Recent.Items[0]
-	SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+user.Username+
+	send.SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+user.Username+
 		"</i> - <b>"+recentScore.Beatmapset.Title+"</b>\nНа сложности <b>"+
 		recentScore.Beatmap.Version+"</b> <i>("+recentScore.Beatmap.DifficultyRating+")</i>\n"+recentScore.Beatmap.URL)
 	SendMapInfo(botUrl, chatId, "", recentScore.BeatmapID)
 
 	// Проверка на результат игры
 	if recentScore.Passed == "true" {
-		SendMsg(botUrl, chatId, "<i>"+user.Username+"</i> прошёл её на <b>"+recentScore.Rank+"</b> получив <b>"+recentScore.PP+"</b> pp")
+		send.SendMsg(botUrl, chatId, "<i>"+user.Username+"</i> прошёл её на <b>"+recentScore.Rank+"</b> получив <b>"+recentScore.PP+"</b> pp")
 	} else {
-		SendMsg(botUrl, chatId, "<i>"+user.Username+"</i> не прошёл её :^(")
+		send.SendMsg(botUrl, chatId, "<i>"+user.Username+"</i> не прошёл её :^(")
 	}
 
-}
-
-// Функция вывода списка всех команд
-func Help(botUrl string, chatId int) {
-	SendMsg(botUrl, chatId, "Привет👋🏻, вот список команд:"+"\n\n"+
-		"/info <u>username</u> - информация о пользователе Osu\n"+
-		"/recent <u>username</u> - последняя сыгранная карта пользователя\n"+
-		"/map <u>beatmapset id</u> - информация о карте Osu\n"+
-		"/online <u>username</u> - статус пользователя в сети")
 }
