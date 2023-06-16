@@ -1,4 +1,4 @@
-module tgBot
+module github.com/hud0shnik/osu_bot
 
 go 1.20
 
