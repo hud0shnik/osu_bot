@@ -26,10 +26,10 @@
 ``` Docker
 docker build -t osu_bot .
 ```
-И запустить:
+И запустить его указав значение токена:
 
 ``` Docker
-docker run osu_bot
+docker run -e TOKEN="<token_value>" osu_bot
 ```
 
 <h3 align="left">📷 Скриншот:</h3>
