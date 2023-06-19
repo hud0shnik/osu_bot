@@ -118,7 +118,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 	}
 
 	// Отправка запроса OsuStatsApi
-	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/user?type=string&id=" + username)
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/user?type=string&id=" + username)
 
 	// Проверка на ошибку
 	if err != nil {
@@ -238,7 +238,7 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 	}
 
 	// Отправка запроса OsuStatsApi
-	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/online?id=" + username)
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/online?id=" + username)
 
 	// Проверка на ошибку
 	if err != nil {
@@ -291,7 +291,7 @@ func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
 	}
 
 	// Отправка запроса OsuStatsApi
-	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/map?type=string&id=" + id + "&beatmapset=" + beatmapset)
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/map?type=string&id=" + id + "&beatmapset=" + beatmapset)
 
 	// Проверка на ошибку
 	if err != nil {
@@ -378,7 +378,7 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	}
 
 	// Отправка запроса OsuStatsApi для поиска пользователя
-	resp, err := http.Get("https://osustatsapi.vercel.app/api/v2/user?type=string&id=" + username)
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/user?type=string&id=" + username)
 	if err != nil {
 		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
@@ -410,7 +410,7 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	json.Unmarshal(body, &user)
 
 	// Отправка запроса OsuStatsApi для получения последней активности
-	resp2, err := http.Get("https://osustatsapi.vercel.app/api/v2/historical?type=string&id=" + user.ID)
+	resp2, err := http.Get("https://osustatsapi.vercel.app/api/historical?type=string&id=" + user.ID)
 	if err != nil {
 		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
