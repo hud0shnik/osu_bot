@@ -37,7 +37,8 @@ docker run -e TOKEN="<token_value>" osu_bot
 
 <h3 align="left">📷 Скриншот:</h3>
 
-<img width="400" src="https://github.com/hud0shnik/osu_bot/blob/main/screenshot.png"/>
+<img width="400" src="https://github.com/hud0shnik/osu_bot/assets/42404892/08d12cbc-c937-49b2-9054-54d1588ca84c"/>
+
 
 <h3 align="left">🔗 Ссылка на бота:</h3>
 <h1 align="center">
