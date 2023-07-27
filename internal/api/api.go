@@ -277,21 +277,16 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 }
 
 // Функция отправки информации о карте
-func SendMapInfo(botUrl string, chatId int, beatmapset, id string) {
-
-	// Проверка на пропуск параметра
-	if beatmapset == "_" || beatmapset == "." {
-		beatmapset = ""
-	}
+func SendMapInfo(botUrl string, chatId int, id string) {
 
 	// Проверка на пустой id
 	if id == "" {
-		send.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map <b>[beatmapset] [id]</b>\nПараметр beatmapset можно пропустить через \".\" или \"_\"\n\nПример:\n/map <b>26154 89799</b>\n/map <b>. 89799</b>")
+		send.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map <b>[id]</b>\n\nПример:\n/map <b>89799</b>")
 		return
 	}
 
 	// Отправка запроса OsuStatsApi
-	resp, err := http.Get("https://osustatsapi.vercel.app/api/map?type=string&id=" + id + "&beatmapset=" + beatmapset)
+	resp, err := http.Get("https://osustatsapi.vercel.app/api/map?type=string&id=" + id)
 
 	// Проверка на ошибку
 	if err != nil {
@@ -434,7 +429,7 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	send.SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+user.Username+
 		"</i> - <b>"+recentScore.Beatmapset.Title+"</b>\nНа сложности <b>"+
 		recentScore.Beatmap.Version+"</b> <i>("+recentScore.Beatmap.DifficultyRating+")</i>\n"+recentScore.Beatmap.URL)
-	SendMapInfo(botUrl, chatId, "", recentScore.BeatmapID)
+	SendMapInfo(botUrl, chatId, recentScore.BeatmapID)
 
 	// Проверка на результат игры
 	if recentScore.Passed == "true" {

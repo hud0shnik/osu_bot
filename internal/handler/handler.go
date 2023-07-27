@@ -30,7 +30,7 @@ func Respond(botUrl string, update telegram.Update) {
 	case "/online":
 		api.SendOnlineInfo(botUrl, update.Message.Chat.ChatId, request[1])
 	case "/map":
-		api.SendMapInfo(botUrl, update.Message.Chat.ChatId, request[1], request[2])
+		api.SendMapInfo(botUrl, update.Message.Chat.ChatId, request[1])
 	case "/start", "/help":
 		commands.Help(botUrl, update.Message.Chat.ChatId)
 	}
