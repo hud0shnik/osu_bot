@@ -5,7 +5,6 @@ import (
 
 	"github.com/hud0shnik/osu_bot/internal/api"
 	"github.com/hud0shnik/osu_bot/internal/commands"
-	"github.com/hud0shnik/osu_bot/internal/send"
 	"github.com/hud0shnik/osu_bot/internal/telegram"
 )
 
@@ -14,7 +13,7 @@ func Respond(botUrl string, update telegram.Update) {
 
 	// Проверка на сообщение
 	if update.Message.Text == "" {
-		send.SendMsg(botUrl, update.Message.Chat.ChatId, "Пока я воспринимаю только текст")
+		telegram.SendMsg(botUrl, update.Message.Chat.ChatId, "Пока я воспринимаю только текст")
 		return
 	}
 

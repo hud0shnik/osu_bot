@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/hud0shnik/osu_bot/internal/send"
+	"github.com/hud0shnik/osu_bot/internal/telegram"
 	"github.com/sirupsen/logrus"
 )
 
@@ -113,7 +113,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 
 	// Проверка параметра
 	if username == "" {
-		send.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/info <b>[id]</b>\n\nПример:\n/info <b>hud0shnik</b>")
+		telegram.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/info <b>[id]</b>\n\nПример:\n/info <b>hud0shnik</b>")
 		return
 	}
 
@@ -122,7 +122,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 
 	// Проверка на ошибку
 	if err != nil {
-		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		telegram.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
 		return
 	}
@@ -133,13 +133,13 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 	case 200:
 		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
-		send.SendMsg(botUrl, chatId, "Пользователь не найден")
+		telegram.SendMsg(botUrl, chatId, "Пользователь не найден")
 		return
 	case 400:
-		send.SendMsg(botUrl, chatId, "Плохой реквест")
+		telegram.SendMsg(botUrl, chatId, "Плохой реквест")
 		return
 	default:
-		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		telegram.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		return
 	}
 
@@ -224,7 +224,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 	}
 
 	// Отправка данных пользователю
-	send.SendPict(botUrl, chatId, user.AvatarUrl, responseText)
+	telegram.SendPict(botUrl, chatId, user.AvatarUrl, responseText)
 
 }
 
@@ -233,7 +233,7 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 
 	// Проверка параметра
 	if username == "" {
-		send.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/online <b>[id]</b>\n\nПример:\n/online <b>hud0shnik</b>")
+		telegram.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/online <b>[id]</b>\n\nПример:\n/online <b>hud0shnik</b>")
 		return
 	}
 
@@ -242,7 +242,7 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 
 	// Проверка на ошибку
 	if err != nil {
-		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		telegram.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
 		return
 	}
@@ -253,13 +253,13 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 	case 200:
 		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
-		send.SendMsg(botUrl, chatId, "Пользователь не найден")
+		telegram.SendMsg(botUrl, chatId, "Пользователь не найден")
 		return
 	case 400:
-		send.SendMsg(botUrl, chatId, "Плохой реквест")
+		telegram.SendMsg(botUrl, chatId, "Плохой реквест")
 		return
 	default:
-		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		telegram.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		return
 	}
 
@@ -269,9 +269,9 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 	json.Unmarshal(body, &response)
 
 	if response.Status {
-		send.SendMsg(botUrl, chatId, "Пользователь сейчас онлайн")
+		telegram.SendMsg(botUrl, chatId, "Пользователь сейчас онлайн")
 	} else {
-		send.SendMsg(botUrl, chatId, "Пользователь сейчас не в сети")
+		telegram.SendMsg(botUrl, chatId, "Пользователь сейчас не в сети")
 	}
 
 }
@@ -281,7 +281,7 @@ func SendMapInfo(botUrl string, chatId int, id string) {
 
 	// Проверка на пустой id
 	if id == "" {
-		send.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map <b>[id]</b>\n\nПример:\n/map <b>89799</b>")
+		telegram.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/map <b>[id]</b>\n\nПример:\n/map <b>89799</b>")
 		return
 	}
 
@@ -290,7 +290,7 @@ func SendMapInfo(botUrl string, chatId int, id string) {
 
 	// Проверка на ошибку
 	if err != nil {
-		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		telegram.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
 		return
 	}
@@ -301,13 +301,13 @@ func SendMapInfo(botUrl string, chatId int, id string) {
 	case 200:
 		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
-		send.SendMsg(botUrl, chatId, "Карта не найдена")
+		telegram.SendMsg(botUrl, chatId, "Карта не найдена")
 		return
 	case 400:
-		send.SendMsg(botUrl, chatId, "Плохой реквест")
+		telegram.SendMsg(botUrl, chatId, "Плохой реквест")
 		return
 	default:
-		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		telegram.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		return
 	}
 
@@ -359,7 +359,7 @@ func SendMapInfo(botUrl string, chatId int, id string) {
 		responseText += "Есть сториборда"
 	}
 
-	send.SendPict(botUrl, chatId, response.Covers.List2X, responseText)
+	telegram.SendPict(botUrl, chatId, response.Covers.List2X, responseText)
 
 }
 
@@ -368,14 +368,14 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 
 	// Проверка параметра
 	if username == "" {
-		send.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/recent <b>[id]</b>\n\nПример:\n/recent <b>hud0shnik</b>")
+		telegram.SendMsg(botUrl, chatId, "Синтаксис команды:\n\n/recent <b>[id]</b>\n\nПример:\n/recent <b>hud0shnik</b>")
 		return
 	}
 
 	// Отправка запроса OsuStatsApi для поиска пользователя
 	resp, err := http.Get("https://osustatsapi.vercel.app/api/user?type=string&id=" + username)
 	if err != nil {
-		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		telegram.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
 		return
 	}
@@ -386,13 +386,13 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	case 200:
 		// При хорошем статусе респонса продолжение выполнения кода
 	case 404:
-		send.SendMsg(botUrl, chatId, "Пользователь не найден")
+		telegram.SendMsg(botUrl, chatId, "Пользователь не найден")
 		return
 	case 400:
-		send.SendMsg(botUrl, chatId, "Плохой реквест")
+		telegram.SendMsg(botUrl, chatId, "Плохой реквест")
 		return
 	default:
-		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		telegram.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		return
 	}
 
@@ -407,7 +407,7 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	// Отправка запроса OsuStatsApi для получения последней активности
 	resp2, err := http.Get("https://osustatsapi.vercel.app/api/historical?type=string&id=" + user.ID)
 	if err != nil {
-		send.SendMsg(botUrl, chatId, "Внутренняя ошибка")
+		telegram.SendMsg(botUrl, chatId, "Внутренняя ошибка")
 		logrus.Printf("http.Get error: %s", err)
 		return
 	}
@@ -420,22 +420,22 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 
 	// Проверка на наличие активности
 	if len(historical.Recent.Items) == 0 {
-		send.SendMsg(botUrl, chatId, "Пользователь <i>"+user.Username+"</i> не играл карты за последние 24 часа")
+		telegram.SendMsg(botUrl, chatId, "Пользователь <i>"+user.Username+"</i> не играл карты за последние 24 часа")
 		return
 	}
 
 	// Вывод информации о последней сыгранной карте
 	recentScore := historical.Recent.Items[0]
-	send.SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+user.Username+
+	telegram.SendMsg(botUrl, chatId, "Последняя сыгранная карта <i>"+user.Username+
 		"</i> - <b>"+recentScore.Beatmapset.Title+"</b>\nНа сложности <b>"+
 		recentScore.Beatmap.Version+"</b> <i>("+recentScore.Beatmap.DifficultyRating+")</i>\n"+recentScore.Beatmap.URL)
 	SendMapInfo(botUrl, chatId, recentScore.BeatmapID)
 
 	// Проверка на результат игры
 	if recentScore.Passed == "true" {
-		send.SendMsg(botUrl, chatId, "<i>"+user.Username+"</i> прошёл её на <b>"+recentScore.Rank+"</b> получив <b>"+recentScore.PP+"</b> pp")
+		telegram.SendMsg(botUrl, chatId, "<i>"+user.Username+"</i> прошёл её на <b>"+recentScore.Rank+"</b> получив <b>"+recentScore.PP+"</b> pp")
 	} else {
-		send.SendMsg(botUrl, chatId, "<i>"+user.Username+"</i> не прошёл её :^(")
+		telegram.SendMsg(botUrl, chatId, "<i>"+user.Username+"</i> не прошёл её :^(")
 	}
 
 }

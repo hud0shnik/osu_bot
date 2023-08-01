@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-// Структуры для работы с Telegram API
+// Структуры для получения обновлений
 
 type TelegramResponse struct {
 	Result []Update `json:"result"`
