@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/hud0shnik/osu_bot/internal/telegram"
@@ -144,7 +144,7 @@ func SendUserInfo(botUrl string, chatId int, username string) {
 	}
 
 	// Запись респонса
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	var user = new(userInfo)
 	json.Unmarshal(body, &user)
 
@@ -264,7 +264,7 @@ func SendOnlineInfo(botUrl string, chatId int, username string) {
 	}
 
 	// Запись респонса
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	var response = new(onlineInfo)
 	json.Unmarshal(body, &response)
 
@@ -312,7 +312,7 @@ func SendMapInfo(botUrl string, chatId int, id string) {
 	}
 
 	// Запись респонса
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	var response = new(mapInfo)
 	json.Unmarshal(body, &response)
 
@@ -397,7 +397,7 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	}
 
 	// Запись респонса
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	var user = new(struct {
 		ID       string `json:"id"`
 		Username string `json:"username"`
@@ -414,7 +414,7 @@ func SendRecentBeatmap(botUrl string, chatId int, username string) {
 	defer resp2.Body.Close()
 
 	// Запись респонса
-	body, _ = ioutil.ReadAll(resp2.Body)
+	body, _ = io.ReadAll(resp2.Body)
 	var historical historicalResponse
 	json.Unmarshal(body, &historical)
 
