@@ -25,18 +25,16 @@
 <h3 align="left">🐋 Запуск в Docker:</h3>
 
 Бота можно запустить в Docker-контейнере. Для этого нужно собрать проект:
-
 ``` Docker
 docker build -t osu_bot .
 ```
-И запустить его указав значение токена:
 
+И запустить его указав значение токена:
 ``` Docker
-docker run -e TOKEN="<token_value>" osu_bot
+docker run --name=osu_bot -e TOKEN="<token_value>" osu_bot
 ```
 
 <h3 align="left">📷 Скриншот:</h3>
-
 <img width="400" src="https://github.com/hud0shnik/osu_bot/assets/42404892/08d12cbc-c937-49b2-9054-54d1588ca84c"/>
 
 
